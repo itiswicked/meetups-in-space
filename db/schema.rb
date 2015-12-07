@@ -11,10 +11,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140606200404) do
+ActiveRecord::Schema.define(version: 20151207174634) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "comments", force: :cascade do |t|
+    t.string   "body",       null: false
+    t.integer  "user_id"
+    t.integer  "meetup_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "comments", ["meetup_id"], name: "index_comments_on_meetup_id", using: :btree
+  add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
+
+  create_table "meetups", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "name",        null: false
+    t.string   "description", null: false
+    t.datetime "start",       null: false
+    t.datetime "end",         null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "meetups", ["user_id"], name: "index_meetups_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "provider",   null: false
@@ -27,5 +50,15 @@ ActiveRecord::Schema.define(version: 20140606200404) do
   end
 
   add_index "users", ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true, using: :btree
+
+  create_table "users_meetups", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "meetup_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "users_meetups", ["meetup_id"], name: "index_users_meetups_on_meetup_id", using: :btree
+  add_index "users_meetups", ["user_id"], name: "index_users_meetups_on_user_id", using: :btree
 
 end
