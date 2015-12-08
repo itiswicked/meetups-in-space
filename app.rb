@@ -54,6 +54,7 @@ post '/meetups' do
   @meetup = Meetup.new(
   name: params[:name],
   description: params[:description],
+  location: params[:location],
   user_id: session[:user_id]
   )
 

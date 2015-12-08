@@ -28,9 +28,10 @@ feature 'user creates a new meetup' do
     expect(page).to have_content 'New Meetup'
     fill_in :name, with: 'Mordenkeinen\'s Birthday'
     fill_in :description, with: 'A Circle of Eight sponsored event. We don\'t mean to be classist, but Wizards only.'
-    save_and_open_page
+    fill_in :location, with: 'The Citidel of Eight'
     click_button 'Submit'
     expect(page).to have_content 'Mordenkeinen\'s Birthday'
+    expect(page).to have_content 'The Citidel of Eight'
   end
 
 end
