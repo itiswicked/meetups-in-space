@@ -15,6 +15,6 @@ descriptions = ["Corrupti illum quis dolor sunt ipsam similique. Placeat facilis
   Meetup.create(
     user_id: i + 1,
     name: meetups[i],
-    description: descriptions[i],
+    description: descriptions[i]
   )
 end

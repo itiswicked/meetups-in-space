@@ -28,14 +28,16 @@ get '/sign_out' do
 end
 
 get '/meetups' do
+  @meetups = Meetup.all
   erb :'meetups/index'
 end
 
 get '/meetups/:id' do
+  @meetup = Meetup.find(params[:id])
   erb :'meetups/show'
 end
 
-get '/meetups/new' do
+get '/meetups_new' do
   erb :'meetups/new'
 end
 

@@ -10,6 +10,11 @@ a:visited {
   text-decoration: none;
 }
 
+.button {
+  background-color: green;
+  padding: 10px;
+}
+
 .container {
   max-width: 1024px;
   margin: 0 auto;
