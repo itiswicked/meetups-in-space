@@ -30,3 +30,15 @@ end
 get '/meetups' do
   erb :'meetups/index'
 end
+
+get '/meetups/:id' do
+  erb :'meetups/show'
+end
+
+get '/meetups/new' do
+  erb :'meetups/new'
+end
+
+post '/meetups' do
+  redirect '/'
+end
