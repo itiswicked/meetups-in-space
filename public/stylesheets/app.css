@@ -10,9 +10,14 @@ a:visited {
   text-decoration: none;
 }
 
+input, textarea {
+  color: black;
+}
+
 .button {
   background-color: green;
   padding: 10px;
+  border: none;
 }
 
 .container {

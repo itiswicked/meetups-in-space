@@ -6,6 +6,10 @@ helpers do
     user_id = session[:user_id]
     @current_user ||= User.find(user_id) if user_id.present?
   end
+
+  def logged_in?
+    session[:user_id].present?
+  end
 end
 
 get '/' do
@@ -38,9 +42,25 @@ get '/meetups/:id' do
 end
 
 get '/meetups_new' do
-  erb :'meetups/new'
+  if logged_in?
+    erb :'meetups/new'
+  else
+    flash.next[:notice] = 'You must be logged in to perform that action.'
+    redirect '/'
+  end
 end
 
 post '/meetups' do
-  redirect '/'
+  @meetup = Meetup.new(
+  name: params[:name],
+  description: params[:description],
+  user_id: session[:user_id]
+  )
+
+  if @meetup.save
+    erb :'meetups/show'
+  else
+    flash.next[:notice] = 'Something went wrong. Try again.'
+    redirect '/meetups_new'
+  end
 end
