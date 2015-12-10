@@ -5,7 +5,6 @@ $(document).ready(function() {
 
     meetup_id = $(this).attr('value')
 
-
     if($(this).text() === 'Join!') {
       joinMeetup(meetup_id);
     } else {
@@ -28,9 +27,9 @@ function joinMeetup(meetup_id) {
     url: '/meetups_join.json',
     data: { meetup_id: meetup_id }
   })
-  .done(function(attendee) {
+  .done(function(user) {
     toggleButton();
-    addAttendeeElem(attendee);
+    addAttendeeElem(user.id, user.username, user.avatar_url);
   });
 }
 
@@ -46,11 +45,11 @@ function leaveMeetup(meetup_id) {
   });
 }
 
-function addAttendeeElem(attendee) {
+function addAttendeeElem(id, username, avatar_url) {
   $('#attendees').append(
-    "<li userid="+attendee.id+">" +
-      "<img class='avatar' src="+attendee.avatar_url+"><br />" +
-      attendee.username +
+    "<li userid="+id+">" +
+      "<img class='avatar' src="+avatar_url+"><br />" +
+      username +
     "</li>"
   );
 }

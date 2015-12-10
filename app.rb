@@ -64,12 +64,11 @@ post '/meetups' do
     user_id: current_user
   )
 
-  @meetup.users << current_user
-
   if @meetup.save
+    @meetup.users << current_user
     erb :'meetups/show'
   else
-    flash.next[:notice] = 'Something went wrong. Try again.'
+    flash.next[:notice] = @meetup.errors.full_messages
     redirect '/meetups_new'
   end
 end

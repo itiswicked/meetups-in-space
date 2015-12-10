@@ -53,13 +53,6 @@ users_meetups.each do |user_meetup|
   UsersMeetup.create(user_meetup)
 end
 
-
-
-
-
-
-
-
 ### FACTORY GIRL TEST ###
 
 FactoryGirl.define do
@@ -70,7 +63,5 @@ FactoryGirl.define do
     sequence(:email) { |n| "email#{n}@email.com" }
     avatar_url Faker::Internet.url
   end
-
-  factory :meetup do
-  end
+  
 end
