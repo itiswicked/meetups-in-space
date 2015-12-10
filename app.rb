@@ -4,7 +4,7 @@ require_relative 'config/application'
 helpers do
   def current_user
     user_id = session[:user_id]
-    @current_user ||= User.find(user_id)  if user_id.present?
+    @current_user ||= User.find(user_id) if user_id.present?
   end
 
   def logged_in?
@@ -42,7 +42,6 @@ end
 
 get '/meetups/:id' do
   @meetup = Meetup.find(params[:id])
-  # binding.pry
   @button_text = user_joined?(@meetup) ? "Leave Meetup" : "Join!"
   erb :'meetups/show'
 end
@@ -51,7 +50,7 @@ get '/meetups_new' do
   if logged_in?
     erb :'meetups/new'
   else
-    flash.next[:notice] = 'You must be logged in to perform that action.'
+    flash.next[:notice] = ['You must be logged in to perform that action.']
     redirect '/'
   end
 end
@@ -61,16 +60,51 @@ post '/meetups' do
     name: params[:name],
     description: params[:description],
     location: params[:location],
-    user_id: current_user
+    user_id: session[:user_id]
   )
 
   if @meetup.save
     @meetup.users << current_user
-    erb :'meetups/show'
+    redirect "/meetups/#{@meetup.id}"
   else
     flash.next[:notice] = @meetup.errors.full_messages
     redirect '/meetups_new'
   end
+end
+
+get '/meetups_edit/:id' do
+  @meetup = Meetup.find(params[:id])
+  if logged_in? && @meetup.user_id == current_user.id
+    erb :'meetups/edit'
+  else
+    flash.next[:notice] = ["Something went wrong"]
+    redirect '/meetups/:id'
+  end
+end
+
+put '/meetups_update/:id' do
+  @meetup = Meetup.find(params[:id])
+  # params.each do |key, value|
+  #   @meetup.send("#{key}=", value) if @meetup.respond_to? key
+  # end
+
+  @meetup.name = params[:name]
+  @meetup.description = params[:description]
+  @meetup.location = params[:location]
+  if @meetup.save
+    redirect "/meetups/#{params[:id]}"
+  else
+    flash.now[:notice] = @meetup.errors.full_messages
+    erb :'/meetups/edit'
+  end
+end
+
+
+get '/meetups_delete/:id' do
+  @meetup = Meetup.find(params[:id])
+  @meetup.destroy
+  flash.next[:notice] = ["Meetup successfully deleted"]
+  redirect '/'
 end
 
 post '/meetups_join.json' do
@@ -78,7 +112,7 @@ post '/meetups_join.json' do
   @meetup = Meetup.find(params[:meetup_id])
   @user   = User.find(session[:user_id])
   @meetup.users << @user
-  { username: @user.username, avatar_url: @user.avatar_url, id: @user.id }.to_json
+  @user.to_json
 end
 
 post '/meetups_leave.json' do

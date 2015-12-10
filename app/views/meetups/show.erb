@@ -1,7 +1,15 @@
 <h1> <%= @meetup.name %> </h1>
 
+<% if @meetup.user_id == current_user.id %>
+  <a class="button" href="/meetups_edit/<%= @meetup.id %>">Edit This Meetup</a>
+  <a class="button" href="/meetups_delete/<%= @meetup.id %>">Cancel This Meetup</a>
+<% end %>
+
 <h3>Location</h3>
 <p> <%= @meetup.location %> </p>
+
+<h3>Creator</h3>
+<p><%= @meetup.user.username %></p>
 
 <h3>Decription</h3>
 <p> <%= @meetup.description %> </p>

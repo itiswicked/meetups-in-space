@@ -1,3 +1,5 @@
+require 'json'
+
 class User < ActiveRecord::Base
   has_many :users_meetups
   has_many :meetups, through: :users_meetups
@@ -13,5 +15,9 @@ class User < ActiveRecord::Base
       user.username = auth.info.name
       user.avatar_url = auth.info.image
     end
+  end
+
+  def to_json
+    { username: username, avatar_url: avatar_url, id: id }.to_json
   end
 end

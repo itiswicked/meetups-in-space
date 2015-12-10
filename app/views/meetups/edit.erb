@@ -1,0 +1,9 @@
+<h1>Edit Meetup</h1>
+
+<form method='post' action="/meetups_update/<%= @meetup.id %>">
+  <input type="hidden" name="_method" value="put">
+  <input type='text' name='name' value="<%= @meetup.name %>"><br />
+  <input type='text' name='location' value="<%= @meetup.location %>"><br />
+  <textarea type='text' name='description'><%= @meetup.description %></textarea><br />
+  <input class='button' value='Submit' type='submit'>
+</form>
