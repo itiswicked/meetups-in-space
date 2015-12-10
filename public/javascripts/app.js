@@ -1,23 +1,61 @@
 $(document).ready(function() {
 
   $('#join-meetup').click(function(event) {
-
     event.preventDefault();
+
+    meetup_id = $(this).attr('value')
+
+
     if($(this).text() === 'Join!') {
-      joinMeetup();
-      $(this).text('Joined!');
+      joinMeetup(meetup_id);
     } else {
-      unjoinMeetup();
-      $(this).text('Join!');
+      leaveMeetup(meetup_id);
     }
-
-
   });
-
 });
 
-function joinMeetup() {
+function toggleButton() {
+  var button = $('#join-meetup');
+  var text = button.text() === 'Join!' ? 'Leave Meetup' : 'Join!';
+  button.text(text);
 }
 
-function unjoinMeetup() {
+/// FIX ALL THIS ///
+
+function joinMeetup(meetup_id) {
+  $.ajax({
+    method: 'POST',
+    url: '/meetups_join.json',
+    data: { meetup_id: meetup_id }
+  })
+  .done(function(attendee) {
+    toggleButton();
+    addAttendeeElem(attendee);
+  });
+}
+
+function leaveMeetup(meetup_id) {
+  $.ajax({
+    method: 'POST',
+    url: '/meetups_leave.json',
+    data: { meetup_id: meetup_id }
+  })
+  .done(function(attendee) {
+    toggleButton();
+    deleteAttendeeElem(attendee.id);
+  });
+}
+
+function addAttendeeElem(attendee) {
+  $('#attendees').append(
+    "<li userid="+attendee.id+">" +
+      "<img class='avatar' src="+attendee.avatar_url+"><br />" +
+      attendee.username +
+    "</li>"
+  );
+}
+
+
+function deleteAttendeeElem(user_id) {
+    $("[userid='" + user_id + "']").remove();
 }

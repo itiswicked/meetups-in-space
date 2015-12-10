@@ -1,7 +1,21 @@
 <h1> <%= @meetup.name %> </h1>
 
-<p>Location: <%= @meetup.location %> </p>
-<p>Decription: <%= @meetup.description %> </p>
+<h3>Location</h3>
+<p> <%= @meetup.location %> </p>
 
+<h3>Decription</h3>
+<p> <%= @meetup.description %> </p>
 
-<a class="button" id="join-meetup" href="#" value="<%= @meetup.id %>">Join!</a>
+<h3>Who's Going</h3>
+<ul id='attendees'>
+  <% @meetup.users.each do |user| %>
+    <li userid="<%= user.id %>">
+      <img class="avatar" src="<%= user.avatar_url %>"><br />
+      <p><%= user.username %></p>
+    </li>
+  <% end %>
+</ul>
+
+<% if logged_in? %>
+  <a class="button" id="join-meetup" href="#" value="<%= @meetup.id %>"> <%= @button_text %> </a>
+<% end %>

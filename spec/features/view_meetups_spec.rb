@@ -11,23 +11,43 @@ require 'spec_helper'
 feature 'user views meetups', js: true do
 
   let!(:meetup) {
-    Meetup.create(
+    Meetup.new(
       name: 'Duck Gathering',
       description: 'A gathering of majestic fowl.'
     )
   }
 
+  let(:user) do
+    User.create(
+      provider: 'github',
+      uid: '1',
+      username: 'itiswicked',
+      email: 'nathanrbourke@gmail.com',
+      avatar_url: 'https://avatars3.githubusercontent.com/u/8851553?v=3&s=460'
+    )
+  end
+
   scenario 'user visits index page' do
+    meetup.save
     visit '/meetups'
     expect(page).to have_content('Duck Gathering')
   end
 
-
   scenario 'user visits show page for specific meetup' do
+    meetup.save
     visit '/meetups'
-
     click_link 'Duck Gathering'
     expect(page).to have_content('Duck Gathering')
     expect(page).to have_content('A gathering of majestic fowl')
+  end
+
+  scenario 'user sees other users attending meetups' do
+    meetup.users << user
+    meetup.save
+    visit '/meetups/1'
+    expect(page).to have_content('itiswicked')
+    page
+      .find('img')['src']
+      .should have_content 'https://avatars3.githubusercontent.com/u/8851553?v=3&s=460'
   end
 end

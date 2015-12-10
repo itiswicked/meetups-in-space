@@ -4,11 +4,15 @@ require_relative 'config/application'
 helpers do
   def current_user
     user_id = session[:user_id]
-    @current_user ||= User.find(user_id) if user_id.present?
+    @current_user ||= User.find(user_id)  if user_id.present?
   end
 
   def logged_in?
     session[:user_id].present?
+  end
+
+  def user_joined?(meetup)
+    meetup.users.map(&:id).include?(session[:user_id])
   end
 end
 
@@ -38,6 +42,8 @@ end
 
 get '/meetups/:id' do
   @meetup = Meetup.find(params[:id])
+  # binding.pry
+  @button_text = user_joined?(@meetup) ? "Leave Meetup" : "Join!"
   erb :'meetups/show'
 end
 
@@ -52,11 +58,13 @@ end
 
 post '/meetups' do
   @meetup = Meetup.new(
-  name: params[:name],
-  description: params[:description],
-  location: params[:location],
-  user_id: session[:user_id]
+    name: params[:name],
+    description: params[:description],
+    location: params[:location],
+    user_id: current_user
   )
+
+  @meetup.users << current_user
 
   if @meetup.save
     erb :'meetups/show'
@@ -64,4 +72,20 @@ post '/meetups' do
     flash.next[:notice] = 'Something went wrong. Try again.'
     redirect '/meetups_new'
   end
+end
+
+post '/meetups_join.json' do
+  content_type :json
+  @meetup = Meetup.find(params[:meetup_id])
+  @user   = User.find(session[:user_id])
+  @meetup.users << @user
+  { username: @user.username, avatar_url: @user.avatar_url, id: @user.id }.to_json
+end
+
+post '/meetups_leave.json' do
+  content_type :json
+  @meetup = Meetup.find(params[:meetup_id])
+  @user   = User.find(session[:user_id])
+  @meetup.users.delete @user
+  { id: @user.id }.to_json
 end

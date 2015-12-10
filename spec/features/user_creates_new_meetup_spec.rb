@@ -17,9 +17,8 @@ feature 'user creates a new meetup' do
   end
   before(:each) { visit '/' }
 
-  scenario 'when not logged in, user is denied access' do
-    click_link 'Create New Meetup'
-    expect(page).to have_content 'You must be logged in to perform that action.'
+  scenario 'when not logged in, cannot create new meetup' do
+    expect(page).to_not have_content 'Create New Meetup'
   end
 
   scenario 'when logged in, creates new event and redirects to show page' do
