@@ -44,8 +44,7 @@ feature 'user views meetups', js: true do
     meetup.users << user
     visit '/meetups/1'
     expect(page).to have_content('itiswicked')
-    page
-      .find('img')['src']
-      .should have_content 'https://avatars3.githubusercontent.com/u/8851553?v=3&s=460'
+    expect(page.find('img')['src'])
+      .to have_content 'https://avatars3.githubusercontent.com/u/8851553?v=3&s=460'
   end
 end
