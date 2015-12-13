@@ -20,8 +20,8 @@ require 'spec_helper'
 feature 'user_interacts_with_meetup', js: true do
 
   let!(:meetup) {
-    Meetup.new(
-      user_id: '1',
+    Meetup.create(
+      user_id: '2',
       name: 'Duck Gathering',
       description: 'A gathering of majestic fowl.'
     )
@@ -40,14 +40,12 @@ feature 'user_interacts_with_meetup', js: true do
 
   context 'when signed in' do
     scenario 'joins meetup that has already been created' do
-      meetup.save
       visit '/'
       sign_in_as user
 
       visit '/meetups/2'
       click_link "Join!"
       expect(page).to have_content(user.username)
-      save_and_open_page
       expect(page).to have_content("Leave Meetup")
     end
   end

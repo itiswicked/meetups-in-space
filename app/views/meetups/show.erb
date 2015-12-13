@@ -1,6 +1,6 @@
 <h1> <%= @meetup.name %> </h1>
 
-<% if @meetup.user_id == current_user.id %>
+<% if logged_in? && @meetup.user_id == current_user.id %>
   <a class="button" href="/meetups_edit/<%= @meetup.id %>">Edit This Meetup</a>
   <a class="button" href="/meetups_delete/<%= @meetup.id %>">Cancel This Meetup</a>
 <% end %>

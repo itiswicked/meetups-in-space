@@ -11,13 +11,14 @@ require 'spec_helper'
 feature 'user views meetups', js: true do
 
   let!(:meetup) {
-    Meetup.new(
+    Meetup.create(
+     user_id: '1',
       name: 'Duck Gathering',
       description: 'A gathering of majestic fowl.'
     )
   }
 
-  let(:user) do
+  let!(:user) do
     User.create(
       provider: 'github',
       uid: '1',
@@ -28,13 +29,11 @@ feature 'user views meetups', js: true do
   end
 
   scenario 'user visits index page' do
-    meetup.save
     visit '/meetups'
     expect(page).to have_content('Duck Gathering')
   end
 
   scenario 'user visits show page for specific meetup' do
-    meetup.save
     visit '/meetups'
     click_link 'Duck Gathering'
     expect(page).to have_content('Duck Gathering')
@@ -43,7 +42,6 @@ feature 'user views meetups', js: true do
 
   scenario 'user sees other users attending meetups' do
     meetup.users << user
-    meetup.save
     visit '/meetups/1'
     expect(page).to have_content('itiswicked')
     page

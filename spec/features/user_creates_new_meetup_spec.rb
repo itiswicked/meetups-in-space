@@ -8,13 +8,14 @@ feature 'user creates a new meetup' do
 
   let(:user) do
     User.create(
-      provider: 'github',
-      uid: '1',
-      username: 'itiswicked',
-      email: 'nathanrbourke@gmail.com',
+      provider:   'github',
+      uid:        '1',
+      username:   'itiswicked',
+      email:      'nathanrbourke@gmail.com',
       avatar_url: 'https://avatars3.githubusercontent.com/u/8851553?v=3&s=460'
     )
   end
+
   before(:each) { visit '/' }
 
   scenario 'when not logged in, cannot create new meetup' do
