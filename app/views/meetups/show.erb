@@ -24,6 +24,23 @@
   <% end %>
 </ul>
 
+<h2>Comments</h2>
+<ul id='comments'>
+  <% @meetup.comments.each do |comment| %>
+    <li>
+      <p><%= comment.user.username %></p>
+      <p><%= comment.body %></p>
+      <% if users_comment?(comment.id) %>
+        <a href="/comments_edit/<%= comment.id %>">Edit</a>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+<% if user_joined?(@meetup) %>
+   <a href="/comments_new/<%= @meetup.id %>">Leave a comment</a>
+<% end %>
+
+
 <% if logged_in? %>
   <a class="button" id="join-meetup" href="#" value="<%= @meetup.id %>"><%= @button_text %></a>
 <% end %>

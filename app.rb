@@ -14,6 +14,10 @@ helpers do
   def user_joined?(meetup)
     meetup.users.map(&:id).include?(session[:user_id])
   end
+
+  def users_comment?(comment_id)
+    comment_id == session[:user_id]
+  end
 end
 
 get '/' do
@@ -121,4 +125,42 @@ post '/meetups_leave.json' do
   @user   = User.find(session[:user_id])
   @meetup.users.delete @user
   { id: @user.id }.to_json
+end
+
+get '/comments_new/:meetup_id' do
+  @meetup = Meetup.find(params[:meetup_id])
+  erb :'comments/new'
+end
+
+post '/comments_create' do
+  @meetup = Meetup.find(params[:meetup_id])
+  @comment = Comment.new(
+    user: current_user,
+    meetup: @meetup,
+    body: params[:body]
+  )
+
+  if @comment.save
+    redirect "/meetups/#{@meetup.id}"
+  else
+    flash.now[:notice] = @comment.errors.full_messages
+    erb :'commments/new'
+  end
+end
+
+get '/comments_edit/:id' do
+  @comment = Comment.find(params[:comment_id])
+  erb :'comments/edit'
+end
+
+put '/comments_update/:id' do
+  @comment = Comment.find(params[:comment_id])
+  @comment.body = params[:commment_body]
+
+  if @comment.save
+    redirect "/meetups/#{@comment.meetup.id}"
+  else
+    flash.next[:notice] = @comment.errors.full_messages
+    redirect "/comments_edit/#{@comment.id}"
+  end
 end

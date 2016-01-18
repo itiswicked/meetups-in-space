@@ -1,0 +1,12 @@
+<h2>Edit Comment</h2>
+<h3><%= @meetup.name %></h3>
+
+<form method='get' action='/comments_update/<%= @comment.id %>'>
+  <input type="hidden" name="_method" value="put">
+  <input type='hidden' value="<%= @meetup.id %>" name='meetup_id' />
+
+  <label for='body'>Comment: </label>
+  <input type='text' name='body' value="<%= @comment.body %>"/>
+
+  <input tpye='submit' value='Submit' />
+</form>

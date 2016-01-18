@@ -1,0 +1,11 @@
+<h2>New Comment</h2>
+<h3><%= @meetup.name %></h3>
+
+<form method='post' action='/comments_create'>
+  <input type='hidden' value="<%= @meetup.id %>" name='meetup_id' />
+
+  <label for='body'>Comment: </label>
+  <input type='text' name='body' />
+
+  <button tpye='submit' value='Submit' />
+</form>

@@ -19,14 +19,6 @@ require 'spec_helper'
 
 feature 'user_interacts_with_meetup', js: true do
 
-  let!(:meetup) {
-    Meetup.create(
-      user_id: '2',
-      name: 'Duck Gathering',
-      description: 'A gathering of majestic fowl.'
-    )
-  }
-
   let!(:user) do
     User.create(
       provider: 'github',
@@ -37,13 +29,21 @@ feature 'user_interacts_with_meetup', js: true do
     )
   end
 
+  let!(:meetup) {
+    Meetup.create(
+    user: user,
+    name: 'Duck Gathering',
+    description: 'A gathering of majestic fowl.'
+    )
+  }
+
+  before(:each) { visit '/' }
 
   context 'when signed in' do
     scenario 'joins meetup that has already been created' do
-      visit '/'
       sign_in_as user
 
-      visit '/meetups/2'
+      click_link 'Duck Gathering'
       click_link "Join!"
       expect(page).to have_content(user.username)
       expect(page).to have_content("Leave Meetup")
@@ -52,7 +52,7 @@ feature 'user_interacts_with_meetup', js: true do
 
   context 'when not signed in' do
     scenario 'will not see join button' do
-      visit 'meetups/2'
+      click_link 'Duck Gathering'
 
       expect(page).to_not have_content("Join!")
     end
